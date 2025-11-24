@@ -76,14 +76,19 @@ export function convertSourceSettingsToQueryParams(settings: SourceSettings): UR
 export function getSourceSettingsFromQueryParamsWithDefault(params: URLSearchParams): SourceSettings {
   const dataSourceParam = params.get('dataSource');
   const mappingParam = params.get('mapping');
-  const dataSource = dataSourceParam
-    ? validateDataSourceWithDefault(JSON.parse(dataSourceParam))
-    : sourceSettingsDefault.dataSource;
-  const mapping = mappingParam ? validateMappingWithDefault(JSON.parse(mappingParam)) : sourceSettingsDefault.mapping;
-  return {
-    dataSource,
-    mapping
-  };
+  try {
+    const dataSource = dataSourceParam
+      ? validateDataSourceWithDefault(JSON.parse(dataSourceParam))
+      : sourceSettingsDefault.dataSource;
+
+    const mapping = mappingParam ? validateMappingWithDefault(JSON.parse(mappingParam)) : sourceSettingsDefault.mapping;
+    return {
+      dataSource,
+      mapping
+    };
+  } catch {
+    return sourceSettingsDefault;
+  }
 }
 
 // unknown型が numberか、数字の文字列であればnumber型を返す
