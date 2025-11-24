@@ -17,6 +17,7 @@ const UrlInputRow = styled('div')({
   display: 'flex',
   gap: 8,
   alignItems: 'flex-start',
+  marginTop: 8,
   marginBottom: 16
 });
 
