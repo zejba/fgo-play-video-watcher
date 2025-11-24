@@ -68,7 +68,7 @@ const Note = styled('div')<{ isExpanded: boolean }>(({ theme, isExpanded }) => (
   userSelect: 'none',
   ...(isExpanded
     ? {
-        whiteSpace: 'normal',
+        whiteSpace: 'pre-wrap',
         wordBreak: 'break-word'
       }
     : {
@@ -81,7 +81,7 @@ const Note = styled('div')<{ isExpanded: boolean }>(({ theme, isExpanded }) => (
     opacity: 0.7
   },
   [theme.breakpoints.up('md')]: {
-    whiteSpace: 'normal',
+    whiteSpace: 'pre-wrap',
     wordBreak: 'break-word',
     overflow: isExpanded ? 'visible' : 'hidden',
     textOverflow: isExpanded ? 'clip' : 'ellipsis',

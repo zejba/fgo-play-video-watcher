@@ -42,11 +42,9 @@ export const csvRowsAtom = atomWithQuery((get) => {
       if (settings.urlType === 'public') {
         // 「ウェブに公開」形式
         csvUrl = `https://docs.google.com/spreadsheets/d/e/${settings.spreadsheetId}/pub?output=csv${gidParam}`;
-      } else if (settings.urlType === 'shared') {
+      } else {
         // 「リンク共有」形式
         csvUrl = `https://docs.google.com/spreadsheets/d/${settings.spreadsheetId}/export?format=csv${gidParam}`;
-      } else {
-        throw new Error('URLタイプが設定されていません');
       }
 
       const response = await fetch(csvUrl);
@@ -83,7 +81,13 @@ export const allDataAtom = atom<ResultItem[]>((get) => {
         : settings.servantIdentify.nameColumnIndex;
     const servantIdentifyValue = cells[servantColumnIndex] || null;
     const turnCountValue = settings.turnCount.mode === 'import' ? cells[settings.turnCount.columnIndex] || null : null;
-    const noteValue = settings.noteColumnIndex !== null ? cells[settings.noteColumnIndex] || null : null;
+    const noteValue =
+      settings.noteColumns.length > 0
+        ? settings.noteColumns
+            .map((item) => cells[item.columnIndex] || '')
+            .filter((v) => v)
+            .join('\n') || null
+        : null;
     const questNameValue = settings.questName.mode === 'import' ? cells[settings.questName.columnIndex] || null : null;
 
     const urlCellValue = cells[settings.urlColumnIndex];
@@ -161,7 +165,15 @@ export const filteredDataAtom = atom<ResultItem[]>((get) => {
       if (selectedRarities.length > 0) {
         const rarity = servant?.rarity?.toString();
         if (!rarity || !selectedRarities.includes(rarity)) {
-          return false;
+          // マシュの場合、3, 4, 5のいずれかでフィルタリング
+          if (
+            item.collectionNo === '1' &&
+            (selectedRarities.includes('3') || selectedRarities.includes('4') || selectedRarities.includes('5'))
+          ) {
+            // OK
+          } else {
+            return false;
+          }
         }
       }
     }

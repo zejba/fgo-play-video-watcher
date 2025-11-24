@@ -8,6 +8,8 @@ import { RarityFilter } from './RarityFilter';
 import { TurnCountFilter } from './TurnCountFilter';
 import { sourceSettingsAtom } from '../jotai/sourceSettings';
 import { NoteFilter } from './NoteFilter';
+import { isFilteredAtom } from '../jotai/filter';
+import { ExpandMore, FilterAlt } from '@mui/icons-material';
 
 const Container = styled('div')(() => ({
   maxWidth: '1000px',
@@ -19,24 +21,20 @@ const Container = styled('div')(() => ({
 
 const Header = styled('div')(() => ({
   display: 'flex',
-  justifyContent: 'space-between',
   alignItems: 'center',
-  padding: '16px'
+  padding: '8px 16px'
 }));
 
 const Title = styled('h2')(() => ({
-  margin: 0,
+  margin: '0px auto 0px 4px',
   fontSize: '16px',
   fontWeight: 600,
   color: '#333'
 }));
 
-const ToggleIcon = styled('span')<{ isOpen: boolean }>(({ isOpen }) => ({
-  fontSize: '14px',
+const ToggleIcon = styled(ExpandMore)<{ isOpen: boolean }>(({ isOpen }) => ({
   transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-  transition: 'transform 0.2s ease',
-  display: 'flex',
-  alignItems: 'center'
+  transition: 'transform 0.2s ease'
 }));
 
 const Content = styled('div')<{ isOpen: boolean }>(({ isOpen }) => ({
@@ -59,6 +57,11 @@ const ClassRarityRow = styled('div')(({ theme }) => ({
   }
 }));
 
+function FilteredIcon() {
+  const isFiltered = useAtomValue(isFilteredAtom);
+  return <FilterAlt color={isFiltered ? 'primary' : 'disabled'} fontSize="small" style={{ marginTop: '2px' }} />;
+}
+
 export function FilterArea() {
   const [isOpen, setIsOpen] = useState(true);
   const settings = useAtomValue(sourceSettingsAtom);
@@ -66,9 +69,10 @@ export function FilterArea() {
   return (
     <Container>
       <Header>
+        <FilteredIcon />
         <Title>絞り込み</Title>
         <IconButton size="small" onClick={() => setIsOpen(!isOpen)}>
-          <ToggleIcon isOpen={isOpen}>▼</ToggleIcon>
+          <ToggleIcon isOpen={isOpen} />
         </IconButton>
       </Header>
       <Content isOpen={isOpen}>

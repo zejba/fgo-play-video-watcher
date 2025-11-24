@@ -5,7 +5,7 @@ export interface SourceSettings {
   spreadsheetId: string | null;
   sheetGid: string | null;
   urlColumnIndex: number;
-  noteColumnIndex: number | null;
+  noteColumns: { label: string | null; columnIndex: number }[];
   questName:
     | {
         mode: 'import';
@@ -35,7 +35,7 @@ export interface SourceSettings {
       };
 }
 
-export const sourceSettingsAtom = atom<SourceSettings>({
+export const sourceSettingsDefault: SourceSettings = {
   urlType: 'public',
   spreadsheetId: null,
   sheetGid: null,
@@ -52,5 +52,7 @@ export const sourceSettingsAtom = atom<SourceSettings>({
     collectionNoColumnIndex: 2
   },
   urlColumnIndex: 3,
-  noteColumnIndex: 4
-});
+  noteColumns: []
+};
+
+export const sourceSettingsAtom = atom<SourceSettings>(sourceSettingsDefault);

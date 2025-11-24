@@ -8,19 +8,21 @@ import { truncate } from '../utils/truncate';
 
 export function QuestNameFilter() {
   const [questNameFilter, setQuestNameFilter] = useAtom(questNameFilterAtom);
-  const settings = useAtomValue(sourceSettingsAtom);
+  const { questName } = useAtomValue(sourceSettingsAtom);
   const { data: csvRows } = useAtomValue(csvRowsAtom);
 
-  const options = useMemo(() => {
-    if (!csvRows) return [] as string[];
+  const options: string[] = useMemo(() => {
+    if (!csvRows) return [];
+    if (questName.mode !== 'import') {
+      return [];
+    }
     const set = new Set<string>();
     csvRows.forEach((row) => {
-      const q = row[settings.questNameColumnIndex];
+      const q = row[questName.columnIndex];
       if (q) set.add(q);
     });
     return Array.from(set).sort();
-  }, [csvRows, settings.questNameColumnIndex]);
-
+  }, [csvRows, questName]);
   return (
     <Autocomplete
       options={options}

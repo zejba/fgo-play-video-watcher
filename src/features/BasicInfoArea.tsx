@@ -15,7 +15,7 @@ const Container = styled('div')(() => ({
 }));
 
 const Text = styled('div')(() => ({
-  padding: '16px',
+  padding: '12px 16px',
   fontSize: '18px',
   fontWeight: 700,
   color: '#333'
@@ -26,8 +26,6 @@ export function BasicInfoArea() {
 
   const questName = settings.questName.mode === 'fixed' ? settings.questName.fixedName : null;
   const turnCount = settings.turnCount.mode === 'fixed' ? settings.turnCount.fixedCount : null;
-
-  console.log('BasicInfoArea render', { questName, turnCount });
 
   if (questName === null && turnCount === null) {
     return null;
