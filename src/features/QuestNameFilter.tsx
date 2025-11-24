@@ -26,6 +26,7 @@ export function QuestNameFilter() {
   return (
     <Autocomplete
       options={options}
+      freeSolo
       getOptionLabel={(option) => option}
       isOptionEqualToValue={(option, value) => option === value}
       value={questNameFilter}
