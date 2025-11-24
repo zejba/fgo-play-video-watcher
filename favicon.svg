@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- 白背景 -->
+  <rect width="200" height="200" fill="#FFFFFF"></rect>
+  
+  <!-- テキスト -->
+  <text x="100" y="60" font-family="'Courier New', Courier, monospace" font-size="32" font-weight="bold" fill="#000000" text-anchor="middle" letter-spacing="2">
+    FGO
+  </text>
+  <text x="100" y="105" font-family="'Courier New', Courier, monospace" font-size="26" font-weight="600" fill="#000000" text-anchor="middle" letter-spacing="1">
+    Play Video
+  </text>
+  <text x="100" y="150" font-family="'Courier New', Courier, monospace" font-size="26" font-weight="600" fill="#000000" text-anchor="middle" letter-spacing="1">
+    Watcher
+  </text>
+</svg><style>@media (prefers-color-scheme: light) { :root { filter: none; } }
+@media (prefers-color-scheme: dark) { :root { filter: none; } }
+</style></svg>
