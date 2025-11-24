@@ -18,8 +18,12 @@ export function UsageModal({ open, onClose }: UsageModalProps) {
             <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
               スプレッドシートのデータで読み取るためには、以下のいずれかの方法でスプレッドシートを公開する必要があります。
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-              方法1: ウェブに公開
+            <Typography component="span" variant="caption" color="warning.main" sx={{ mb: 1 }}>
+              注意:
+              公開されたデータは誰でもアクセス可能になり、設定によってはGoogleアカウントの名前やメールアドレスが表示される可能性があります。
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 1, mt: 2 }}>
+              方法1: ウェブに公開（推奨）
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ ml: 2, mb: 1 }}>
               1. 「ファイル」{'>'}「共有」{'>'}「ウェブに公開」を選択
