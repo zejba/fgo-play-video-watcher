@@ -20,12 +20,11 @@ const UrlInputRow = styled('div')({
   marginBottom: 16
 });
 
-const SpreadsheetInfoBox = styled('div')(({ theme }) => ({
-  border: `1px solid ${theme.palette.divider}`,
+const SpreadsheetInfoBox = styled('div')(() => ({
+  border: `1px solid #ccc`,
   borderRadius: 8,
   padding: 16,
-  marginBottom: 16,
-  backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.02)' : 'rgba(0, 0, 0, 0.02)'
+  marginBottom: 16
 }));
 
 const ErrorText = styled('div')(({ theme }) => ({
@@ -105,10 +104,10 @@ function UrlTypeSelect() {
     <FormControl variant="outlined" size="small" fullWidth error={!!error} sx={{ marginBottom: '12px' }}>
       <InputLabel>タイプ</InputLabel>
       <Select
-        value={tempUrlType ?? ''}
+        value={tempUrlType}
         label="タイプ"
         onChange={(e) => {
-          setTempUrlType(e.target.value as 'public' | 'shared');
+          setTempUrlType(e.target.value);
           setError(undefined);
         }}
       >

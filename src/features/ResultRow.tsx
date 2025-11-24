@@ -133,10 +133,10 @@ export function ResultRow({
       <InfoSection>
         <Title>
           <Text>
-            {settings.questName.mode === 'import' ? (questName ? `${truncate(questName)} ` : '') : ''}
-            {settings.turnCount.mode === 'import' ? (turnCount || '?') + 'T' : ''}
+            {settings.mapping.questName.mode === 'import' ? (questName ? `${truncate(questName)} ` : '') : ''}
+            {settings.mapping.turn.mode === 'import' ? (turnCount || '?') + 'T' : ''}
           </Text>
-          {settings.servantIdentify.mode === 'collectionNo' ? (
+          {settings.mapping.servantIdentify.mode === 'collectionNo' ? (
             <>
               <Text>{servantName ?? '不明なサーヴァント'}</Text>
               <Text>

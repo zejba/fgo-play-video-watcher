@@ -24,8 +24,8 @@ const Text = styled('div')(() => ({
 export function BasicInfoArea() {
   const settings = useAtomValue(sourceSettingsAtom);
 
-  const questName = settings.questName.mode === 'fixed' ? settings.questName.fixedName : null;
-  const turnCount = settings.turnCount.mode === 'fixed' ? settings.turnCount.fixedCount : null;
+  const questName = settings.mapping.questName.mode === 'fixed' ? settings.mapping.questName.name : null;
+  const turnCount = settings.mapping.turn.mode === 'fixed' ? settings.mapping.turn.count : null;
 
   if (questName === null && turnCount === null) {
     return null;

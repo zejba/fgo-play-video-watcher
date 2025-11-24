@@ -14,7 +14,7 @@ export function ServantNameFilter() {
   const [servantIdFilter, setServantIdFilter] = useAtom(servantCollectionNoFilterAtom);
   const [servantNameFilter, setServantNameFilter] = useAtom(servantNameFilterAtom);
 
-  if (settings.servantIdentify.mode === 'name') {
+  if (settings.mapping.servantIdentify.mode === 'name') {
     return (
       <TextField
         label="サーヴァント名"

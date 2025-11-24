@@ -77,10 +77,10 @@ export function FilterArea() {
       </Header>
       <Content isOpen={isOpen}>
         <FilterGrid>
-          {settings.questName.mode === 'import' && <QuestNameFilter />}
-          {settings.turnCount.mode === 'import' && <TurnCountFilter />}
+          {settings.mapping.questName.mode === 'import' && <QuestNameFilter />}
+          {settings.mapping.turn.mode === 'import' && <TurnCountFilter />}
           <ServantNameFilter />
-          {settings.servantIdentify.mode === 'collectionNo' && (
+          {settings.mapping.servantIdentify.mode === 'collectionNo' && (
             <ClassRarityRow>
               <ClassFilter />
               <RarityFilter />

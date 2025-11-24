@@ -32,19 +32,19 @@ export interface ResultItem {
 export const csvRowsAtom = atomWithQuery((get) => {
   const settings = get(sourceSettingsAtom);
   return {
-    queryKey: ['spreadsheet', settings.urlType, settings.spreadsheetId, settings.sheetGid],
+    queryKey: ['spreadsheet', settings.dataSource.type, settings.dataSource.id, settings.dataSource.gid],
     queryFn: async () => {
       // gidパラメータを追加してシートを指定
-      const gidParam = settings.sheetGid ? `&gid=${settings.sheetGid}` : '';
+      const gidParam = settings.dataSource.gid ? `&gid=${settings.dataSource.gid}` : '';
 
       // urlTypeに応じて適切なURL形式を選択
       let csvUrl: string;
-      if (settings.urlType === 'public') {
+      if (settings.dataSource.type === 'public') {
         // 「ウェブに公開」形式
-        csvUrl = `https://docs.google.com/spreadsheets/d/e/${settings.spreadsheetId}/pub?output=csv${gidParam}`;
+        csvUrl = `https://docs.google.com/spreadsheets/d/e/${settings.dataSource.id}/pub?output=csv${gidParam}`;
       } else {
         // 「リンク共有」形式
-        csvUrl = `https://docs.google.com/spreadsheets/d/${settings.spreadsheetId}/export?format=csv${gidParam}`;
+        csvUrl = `https://docs.google.com/spreadsheets/d/${settings.dataSource.id}/export?format=csv${gidParam}`;
       }
 
       const response = await fetch(csvUrl);
@@ -59,7 +59,7 @@ export const csvRowsAtom = atomWithQuery((get) => {
       });
       return data;
     },
-    enabled: !!settings.spreadsheetId && !!settings.urlType
+    enabled: !!settings.dataSource.id && !!settings.dataSource.type
   };
 });
 
@@ -75,22 +75,18 @@ export const allDataAtom = atom<ResultItem[]>((get) => {
   const data: ResultItem[] = [];
 
   csvRows.forEach((cells, index) => {
-    const servantColumnIndex =
-      settings.servantIdentify.mode === 'collectionNo'
-        ? settings.servantIdentify.collectionNoColumnIndex
-        : settings.servantIdentify.nameColumnIndex;
-    const servantIdentifyValue = cells[servantColumnIndex] || null;
-    const turnCountValue = settings.turnCount.mode === 'import' ? cells[settings.turnCount.columnIndex] || null : null;
+    const servantIdentifyValue = cells[settings.mapping.servantIdentify.col] || null;
+    const turnCountValue = settings.mapping.turn.mode === 'import' ? cells[settings.mapping.turn.col] || null : null;
     const noteValue =
-      settings.noteColumns.length > 0
-        ? settings.noteColumns
-            .map((item) => cells[item.columnIndex] || '')
+      settings.mapping.notes.length > 0
+        ? settings.mapping.notes
+            .map((item) => cells[item.col] || '')
             .filter((v) => v)
             .join('\n') || null
         : null;
-    const questNameValue = settings.questName.mode === 'import' ? cells[settings.questName.columnIndex] || null : null;
-
-    const urlCellValue = cells[settings.urlColumnIndex];
+    const questNameValue =
+      settings.mapping.questName.mode === 'import' ? cells[settings.mapping.questName.col] || null : null;
+    const urlCellValue = cells[settings.mapping.urlCol];
     if (!urlCellValue) {
       return;
     }
@@ -105,27 +101,27 @@ export const allDataAtom = atom<ResultItem[]>((get) => {
         return;
       }
       const turnCount =
-        settings.turnCount.mode === 'fixed'
-          ? settings.turnCount.fixedCount
+        settings.mapping.turn.mode === 'fixed'
+          ? settings.mapping.turn.count
           : turnCountValue
           ? parseInt(turnCountValue, 10) || null
           : null;
-      const collectionNo = settings.servantIdentify.mode === 'collectionNo' ? servantIdentifyValue : null;
+      const collectionNo = settings.mapping.servantIdentify.mode === 'collectionNo' ? servantIdentifyValue : null;
       const servantName =
-        settings.servantIdentify.mode === 'name'
+        settings.mapping.servantIdentify.mode === 'name'
           ? servantIdentifyValue
           : servantIdentifyValue
           ? servantDataMap[servantIdentifyValue]?.name || null
           : null;
       data.push({
-        id: `${settings.spreadsheetId}-${index}-${index2}`,
+        id: `${settings.dataSource.id}-${index}-${index2}`,
         videoId,
         videoType,
         collectionNo,
         servantName,
         turnCount,
         note: noteValue,
-        questName: settings.questName.mode === 'fixed' ? settings.questName.fixedName : questNameValue
+        questName: settings.mapping.questName.mode === 'fixed' ? settings.mapping.questName.name : questNameValue
       });
     });
   });
@@ -152,7 +148,7 @@ export const filteredDataAtom = atom<ResultItem[]>((get) => {
     const servant = item.collectionNo ? servantDataMap[item.collectionNo] : undefined;
 
     // サーヴァント識別モードがcollectionNoの場合のみクラス・レアリティフィルタを適用
-    if (settings.servantIdentify.mode === 'collectionNo') {
+    if (settings.mapping.servantIdentify.mode === 'collectionNo') {
       // クラスフィルタ
       if (selectedClasses.length > 0) {
         const servantClass = servant?.className;
@@ -179,7 +175,7 @@ export const filteredDataAtom = atom<ResultItem[]>((get) => {
     }
 
     // ターン数フィルタ（CSVから取得している場合のみ有効）
-    if (settings.turnCount.mode === 'import') {
+    if (settings.mapping.turn.mode === 'import') {
       if (minTurnCount !== null && (item.turnCount === null || item.turnCount < minTurnCount)) {
         return false;
       }
@@ -189,7 +185,7 @@ export const filteredDataAtom = atom<ResultItem[]>((get) => {
     }
 
     // サーヴァントフィルタ
-    if (settings.servantIdentify.mode === 'collectionNo') {
+    if (settings.mapping.servantIdentify.mode === 'collectionNo') {
       // マテリアルNo.モード: マテリアルNo.で絞り込み
       if (servantIdFilter !== null && servantIdFilter !== undefined) {
         const collectionNo = servant?.collectionNo ?? (item.collectionNo ? parseInt(item.collectionNo, 10) : NaN);
@@ -216,7 +212,7 @@ export const filteredDataAtom = atom<ResultItem[]>((get) => {
     }
 
     // クエスト名フィルタ（列参照モードのみ有効）
-    if (settings.questName.mode === 'import' && questNameFilter) {
+    if (settings.mapping.questName.mode === 'import' && questNameFilter) {
       const q = item.questName || '';
       if (!q.includes(questNameFilter)) {
         return false;

@@ -1,9 +1,12 @@
 import { Button } from '@mui/material';
 import { useAtomCallback } from 'jotai/utils';
 import { useSearchParams } from 'react-router-dom';
-import { sourceSettingsAtom, type SourceSettings } from '../../jotai/sourceSettings';
+import {
+  convertSourceSettingsToQueryParams,
+  sourceSettingsAtom,
+  type SourceSettings
+} from '../../jotai/sourceSettings';
 import { tempSettingsAtom, tempErrorsAtom } from '../../jotai/tempSettings';
-import { sourceSettingsToQuery } from '../../utils/sourceSettingsValidator';
 import {
   extractSpreadsheetId,
   validateSpreadsheetId,
@@ -41,27 +44,17 @@ export function SubmitButton({ onSuccess }: { onSuccess: () => void }) {
           newErrors.urlType = '選択してください';
         }
 
-        // スプレッドシートIDの抽出とバリデーション
-        const extractedId = tempSettings.spreadsheetId ? extractSpreadsheetId(tempSettings.spreadsheetId) : null;
-        if (!!extractedId) {
-          const idValidation = validateSpreadsheetId(extractedId);
-          if (extractedId && !idValidation.isValid) {
+        // スプレッドシートIDのバリデーション
+        if (!!tempSettings.spreadsheetId) {
+          const idValidation = validateSpreadsheetId(tempSettings.spreadsheetId);
+          if (tempSettings.spreadsheetId && !idValidation.isValid) {
             newErrors.spreadsheetId = idValidation.error || '値が不正です';
           }
         }
 
-        // URLからGIDを抽出（GIDが未入力の場合のみ）
-        let finalGid = tempSettings.sheetGid;
-        if (!tempSettings.sheetGid && tempSettings.spreadsheetId) {
-          const extractedGid = extractGidFromUrl(tempSettings.spreadsheetId);
-          if (extractedGid) {
-            finalGid = extractedGid;
-          }
-        }
-
         // シートGIDのバリデーション
-        if (finalGid) {
-          const gidValidation = validateSheetGid(finalGid);
+        if (tempSettings.sheetGid) {
+          const gidValidation = validateSheetGid(tempSettings.sheetGid);
           if (!gidValidation.isValid) {
             newErrors.sheetGid = gidValidation.error || '値が不正です';
           }
@@ -112,10 +105,6 @@ export function SubmitButton({ onSuccess }: { onSuccess: () => void }) {
           if (!qValidation.isValid) {
             newErrors.questNameColumn = qValidation.error || '選択してください';
           }
-        } else {
-          if ((tempSettings.fixedQuestName?.length ?? 0) > 20) {
-            newErrors.fixedQuestName = '20文字以下で入力してください';
-          }
         }
 
         // エラーがある場合はエラーをセットして終了
@@ -128,29 +117,30 @@ export function SubmitButton({ onSuccess }: { onSuccess: () => void }) {
         set(tempErrorsAtom, {});
 
         const sourceSettings: SourceSettings = {
-          urlType: tempSettings.urlType,
-          spreadsheetId: extractedId,
-          sheetGid: finalGid,
-          urlColumnIndex: tempSettings.columnIndex,
-          servantIdentify:
-            tempSettings.servantIdentifyMode === 'collectionNo'
-              ? { mode: 'collectionNo', collectionNoColumnIndex: tempSettings.servantIdColumnIndex }
-              : { mode: 'name', nameColumnIndex: tempSettings.servantNameColumnIndex },
-          noteColumns: tempSettings.noteColumnIndices.map((idx) => ({
-            label: null,
-            columnIndex: idx
-          })),
-          questName:
-            tempSettings.questNameMode === 'import'
-              ? { mode: 'import', columnIndex: tempSettings.questNameColumnIndex }
-              : { mode: 'fixed', fixedName: tempSettings.fixedQuestName || null },
-          turnCount:
-            tempSettings.turnCountMode === 'import'
-              ? { mode: 'import', columnIndex: tempSettings.turnCountColumnIndex }
-              : { mode: 'fixed', fixedCount: tempSettings.fixedTurnCount }
+          dataSource: {
+            type: tempSettings.urlType!,
+            id: extractSpreadsheetId(tempSettings.spreadsheetId!),
+            gid: tempSettings.sheetGid ? tempSettings.sheetGid : extractGidFromUrl(tempSettings.spreadsheetId!) || null
+          },
+          mapping: {
+            urlCol: tempSettings.columnIndex,
+            notes: tempSettings.noteColumnIndices.map((col) => ({ label: null, col })),
+            questName:
+              tempSettings.questNameMode === 'import'
+                ? { mode: 'import', col: tempSettings.questNameColumnIndex }
+                : { mode: 'fixed', name: tempSettings.fixedQuestName || null },
+            turn:
+              tempSettings.turnCountMode === 'import'
+                ? { mode: 'import', col: tempSettings.turnCountColumnIndex }
+                : { mode: 'fixed', count: tempSettings.fixedTurnCount || null },
+            servantIdentify:
+              tempSettings.servantIdentifyMode === 'collectionNo'
+                ? { mode: 'collectionNo', col: tempSettings.servantIdColumnIndex }
+                : { mode: 'name', col: tempSettings.servantNameColumnIndex }
+          }
         };
         set(sourceSettingsAtom, sourceSettings);
-        setSearchParams(sourceSettingsToQuery(sourceSettings), { replace: true });
+        setSearchParams(convertSourceSettingsToQueryParams(sourceSettings), { replace: true });
         onSuccess();
       },
       [setSearchParams, onSuccess]

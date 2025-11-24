@@ -49,7 +49,7 @@ export function Header() {
     setModalOpen(true);
   }, [setTempSettings, sourceSettings, setTempErrors]);
 
-  const { refetch, isRefetching } = useAtomValue(csvRowsAtom);
+  const { refetch, isRefetching, isEnabled } = useAtomValue(csvRowsAtom);
 
   return (
     <>
@@ -59,6 +59,7 @@ export function Header() {
           onClick={() => void refetch()}
           title="データソースを更新"
           loading={isRefetching}
+          disabled={!isEnabled}
           style={{ marginLeft: 'auto' }}
         >
           <Cached />

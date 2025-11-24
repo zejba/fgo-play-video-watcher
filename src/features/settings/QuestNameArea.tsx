@@ -9,20 +9,10 @@ import {
   tempFixedQuestNameErrorAtom
 } from '../../jotai/tempSettings';
 import { columnOptions } from '../../utils/columnOptions';
-
-const FormRow = styled('div')(({ theme }) => ({
-  display: 'flex',
-  columnGap: 12,
-  alignItems: 'flex-start',
-  flexWrap: 'wrap',
-  [theme.breakpoints.up('md')]: {
-    flexWrap: 'nowrap'
-  }
-}));
+import { FormRow } from './FormRow';
 
 const Half = styled('div')(({ theme }) => ({
   display: 'flex',
-  rowGap: 12,
   width: '100%',
   [theme.breakpoints.up('md')]: {
     width: '50%'

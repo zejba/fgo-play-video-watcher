@@ -8,22 +8,11 @@ import {
   tempTurnCountColumnErrorAtom,
   tempFixedTurnCountErrorAtom
 } from '../../jotai/tempSettings';
-
-const columnOptions = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'] as const;
-
-const FormRow = styled('div')(({ theme }) => ({
-  display: 'flex',
-  columnGap: 12,
-  alignItems: 'flex-start',
-  flexWrap: 'wrap',
-  [theme.breakpoints.up('md')]: {
-    flexWrap: 'nowrap'
-  }
-}));
+import { FormRow } from './FormRow';
+import { columnOptions } from '../../utils/columnOptions';
 
 const Half = styled('div')(({ theme }) => ({
   display: 'flex',
-  rowGap: 12,
   width: '100%',
   [theme.breakpoints.up('md')]: {
     width: '50%'
@@ -86,9 +75,9 @@ function TurnCountColumnSelect() {
           setError(undefined);
         }}
       >
-        {columnOptions.map((col, idx) => (
-          <MenuItem key={col} value={idx}>
-            {col}列
+        {columnOptions.map((col) => (
+          <MenuItem key={col.value} value={col.value}>
+            {col.label}
           </MenuItem>
         ))}
       </Select>

@@ -1,4 +1,4 @@
-import { Select, MenuItem, FormControl, InputLabel, FormHelperText } from '@mui/material';
+import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useAtom } from 'jotai';
 import { tempColumnIndexAtom, tempColumnIndexErrorAtom } from '../../jotai/tempSettings';
@@ -40,7 +40,6 @@ export function VideoUrlArea() {
           </MenuItem>
         ))}
       </Select>
-      <FormHelperText>動画URLがないか、形式が異なる行は無視されます</FormHelperText>
       {error && <ErrorText>{error}</ErrorText>}
     </StyledFormControl>
   );

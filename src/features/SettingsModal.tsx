@@ -1,4 +1,4 @@
-import { Dialog, Button, DialogTitle, DialogContent, DialogActions, DialogContentText } from '@mui/material';
+import { Dialog, Button, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { SpreadsheetIdArea } from './settings/SpreadsheetIdArea';
 import { QuestNameArea } from './settings/QuestNameArea';
 import { TurnCountArea } from './settings/TurnCountArea';
@@ -17,9 +17,6 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>データソース設定</DialogTitle>
       <DialogContent sx={{ paddingTop: '8px' }}>
-        <DialogContentText sx={{ marginBottom: '16px' }}>
-          Googleスプレッドシートは「ウェブへの公開」または「リンクを知っている全員に共有」で全体公開したものを指定してください。
-        </DialogContentText>
         <SpreadsheetIdArea />
         <QuestNameArea />
         <TurnCountArea />

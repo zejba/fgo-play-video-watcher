@@ -21,22 +21,22 @@ interface TempSettings {
 }
 
 export const convertSourceSettingsToTemp = (sourceSettings: SourceSettings): TempSettings => ({
-  urlType: sourceSettings.urlType,
-  spreadsheetId: sourceSettings.spreadsheetId ?? '',
-  sheetGid: sourceSettings.sheetGid,
-  questNameMode: sourceSettings.questName.mode,
-  questNameColumnIndex: sourceSettings.questName.mode === 'import' ? sourceSettings.questName.columnIndex : 0,
-  fixedQuestName: sourceSettings.questName.mode === 'fixed' ? sourceSettings.questName.fixedName : null,
-  turnCountMode: sourceSettings.turnCount.mode,
-  turnCountColumnIndex: sourceSettings.turnCount.mode === 'import' ? sourceSettings.turnCount.columnIndex : 1,
-  fixedTurnCount: sourceSettings.turnCount.mode === 'fixed' ? sourceSettings.turnCount.fixedCount : null,
-  servantIdentifyMode: sourceSettings.servantIdentify.mode,
+  urlType: sourceSettings.dataSource.type,
+  spreadsheetId: sourceSettings.dataSource.id ?? '',
+  sheetGid: sourceSettings.dataSource.gid,
+  questNameMode: sourceSettings.mapping.questName.mode,
+  questNameColumnIndex: sourceSettings.mapping.questName.mode === 'import' ? sourceSettings.mapping.questName.col : 0,
+  fixedQuestName: sourceSettings.mapping.questName.mode === 'fixed' ? sourceSettings.mapping.questName.name : null,
+  turnCountMode: sourceSettings.mapping.turn.mode,
+  turnCountColumnIndex: sourceSettings.mapping.turn.mode === 'import' ? sourceSettings.mapping.turn.col : 1,
+  fixedTurnCount: sourceSettings.mapping.turn.mode === 'fixed' ? sourceSettings.mapping.turn.count : null,
+  servantIdentifyMode: sourceSettings.mapping.servantIdentify.mode,
   servantIdColumnIndex:
-    sourceSettings.servantIdentify.mode === 'collectionNo' ? sourceSettings.servantIdentify.collectionNoColumnIndex : 2,
+    sourceSettings.mapping.servantIdentify.mode === 'collectionNo' ? sourceSettings.mapping.servantIdentify.col : 2,
   servantNameColumnIndex:
-    sourceSettings.servantIdentify.mode === 'name' ? sourceSettings.servantIdentify.nameColumnIndex : 2,
-  columnIndex: sourceSettings.urlColumnIndex,
-  noteColumnIndices: sourceSettings.noteColumns.map((col) => col.columnIndex)
+    sourceSettings.mapping.servantIdentify.mode === 'name' ? sourceSettings.mapping.servantIdentify.col : 2,
+  columnIndex: sourceSettings.mapping.urlCol,
+  noteColumnIndices: sourceSettings.mapping.notes.map((col) => col.col)
 });
 
 export const tempSettingsAtom = atom<TempSettings>(convertSourceSettingsToTemp(sourceSettingsDefault));
