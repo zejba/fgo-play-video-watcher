@@ -7,7 +7,7 @@
     "rarity": 4,
     "className": "shielder",
     "attribute": "earth",
-    "atkMax": 7815,
+    "atkMax": 9653,
     "atk120": 12419,
     "starGen": 9.9,
     "npGain": 0.84,
@@ -16,11 +16,11 @@
       "arts": 2,
       "quick": 2,
       "extra": 3,
-      "np": 5
+      "np": 0
     },
     "noblePhantasm": {
-      "card": "buster",
-      "value": 600
+      "card": "arts",
+      "value": 0
     },
     "classPassive": [
       {
@@ -15920,7 +15920,7 @@
       "np": 8
     },
     "noblePhantasm": {
-      "card": "2",
+      "card": "buster",
       "value": 1000
     },
     "classPassive": [
