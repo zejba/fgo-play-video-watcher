@@ -222,3 +222,43 @@ export const filteredDataAtom = atom<ResultItem[]>((get) => {
     return true;
   });
 });
+
+/**
+ * クエスト名一覧を返すatom
+ */
+export const questNameOptionsAtom = atom<string[]>((get) => {
+  const { data: csvRows } = get(csvRowsAtom);
+  const settings = get(sourceSettingsAtom);
+  const questName = settings.mapping.questName;
+
+  if (!csvRows) return [];
+  if (questName.mode !== 'import') {
+    return [];
+  }
+  const set = new Set<string>();
+  csvRows.forEach((row) => {
+    const q = row[questName.col];
+    if (q) set.add(q);
+  });
+  return Array.from(set).sort();
+});
+
+/**
+ * サーヴァント名一覧を返すatom
+ */
+export const servantNameOptionsAtom = atom<string[]>((get) => {
+  const { data: csvRows } = get(csvRowsAtom);
+  const settings = get(sourceSettingsAtom);
+  const servantIdentify = settings.mapping.servantIdentify;
+
+  if (!csvRows) return [];
+  if (servantIdentify.mode !== 'name') {
+    return [];
+  }
+  const set = new Set<string>();
+  csvRows.forEach((row) => {
+    const name = row[servantIdentify.col];
+    if (name) set.add(name);
+  });
+  return Array.from(set).sort();
+});

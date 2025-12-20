@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { styled, IconButton } from '@mui/material';
 import { useAtomValue } from 'jotai';
-import { ServantNameFilter } from './ServantNameFilter';
+import { ServantFilter } from './ServantFilter';
 import { QuestNameFilter } from './QuestNameFilter';
 import { ClassFilter } from './ClassFilter';
 import { RarityFilter } from './RarityFilter';
@@ -79,7 +79,7 @@ export function FilterArea() {
         <FilterGrid>
           {settings.mapping.questName.mode === 'import' && <QuestNameFilter />}
           {settings.mapping.turn.mode === 'import' && <TurnCountFilter />}
-          <ServantNameFilter />
+          <ServantFilter />
           {settings.mapping.servantIdentify.mode === 'collectionNo' && (
             <ClassRarityRow>
               <ClassFilter />
