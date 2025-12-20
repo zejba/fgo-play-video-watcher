@@ -4,7 +4,7 @@ import { sourceSettingsAtom } from '../jotai/sourceSettings';
 
 const Container = styled('div')(() => ({
   maxWidth: '1000px',
-  margin: '0 auto 16px',
+  margin: '0 auto 12px auto',
   backgroundColor: '#fff',
   border: '1px solid #e0e0e0',
   borderRadius: '8px',

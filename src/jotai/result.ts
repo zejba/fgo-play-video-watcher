@@ -12,6 +12,7 @@ import {
   noteFilterAtom,
   questNameFilterAtom
 } from './filter';
+import { selectedSortOptionAtom, sortOrderAtom, type SortOption } from './sort';
 import { servantDataMap } from '../data/servantData';
 import { extractVideoInfo, type VideoType } from '../utils/videoUtils';
 import { validateAndFormatDate } from '../utils/spreadsheetValidator';
@@ -134,7 +135,7 @@ export const allDataAtom = atom<ResultItem[]>((get) => {
 });
 
 /**
- * フィルタリング後のResultItemを返すatom
+ * フィルタリング・ソート後のResultItemを返すatom
  */
 export const filteredDataAtom = atom<ResultItem[]>((get) => {
   const allData = get(allDataAtom);
@@ -147,8 +148,10 @@ export const filteredDataAtom = atom<ResultItem[]>((get) => {
   const servantNameFilter = get(servantNameFilterAtom);
   const noteFilter = get(noteFilterAtom);
   const questNameFilter = get(questNameFilterAtom);
+  const sortOption = get(selectedSortOptionAtom);
+  const sortOrder = get(sortOrderAtom);
 
-  return allData.filter((item) => {
+  const filtered = allData.filter((item) => {
     const servant = item.collectionNo ? servantDataMap[item.collectionNo] : undefined;
 
     // サーヴァント識別モードがcollectionNoの場合のみクラス・レアリティフィルタを適用
@@ -225,6 +228,13 @@ export const filteredDataAtom = atom<ResultItem[]>((get) => {
 
     return true;
   });
+
+  // ソート処理
+  if (sortOption === 'default') {
+    return sortOrder === 'desc' ? [...filtered].reverse() : filtered;
+  }
+
+  return [...filtered].sort(getSortComparator(sortOption, sortOrder === 'desc'));
 });
 
 /**
@@ -266,3 +276,120 @@ export const servantNameOptionsAtom = atom<string[]>((get) => {
   });
   return Array.from(set).sort();
 });
+
+// クラスの順序定義
+const classOrder = {
+  saber: 1,
+  archer: 2,
+  lancer: 3,
+  rider: 4,
+  caster: 5,
+  assassin: 6,
+  berserker: 7,
+  shielder: 8,
+  ruler: 9,
+  avenger: 10,
+  alterEgo: 11,
+  moonCancer: 12,
+  foreigner: 13,
+  pretender: 14,
+  beast: 15
+} as const;
+
+/**
+ * ソート関数
+ */
+function getSortComparator(sortOption: SortOption, isDesc: boolean): (a: ResultItem, b: ResultItem) => number {
+  return (a: ResultItem, b: ResultItem): number => {
+    let result = 0;
+
+    switch (sortOption) {
+      case 'default':
+        return 0; // 元の順序を維持
+
+      case 'date': {
+        const dateA = a.date;
+        const dateB = b.date;
+        // 空の値を常に最後に
+        if (!dateA && !dateB) return 0;
+        if (!dateA) return 1;
+        if (!dateB) return -1;
+        result = dateA.localeCompare(dateB);
+        break;
+      }
+
+      case 'questName': {
+        const qA = a.questName;
+        const qB = b.questName;
+        // 空の値を常に最後に
+        if (!qA && !qB) return 0;
+        if (!qA) return 1;
+        if (!qB) return -1;
+        result = qA.localeCompare(qB);
+        break;
+      }
+
+      case 'turnCount': {
+        // nullを常に最後に
+        if (a.turnCount === null && b.turnCount === null) return 0;
+        if (a.turnCount === null) return 1;
+        if (b.turnCount === null) return -1;
+        result = a.turnCount - b.turnCount;
+        break;
+      }
+
+      case 'collectionNo': {
+        // 空の値を常に最後に
+        if (!a.collectionNo && !b.collectionNo) return 0;
+        if (!a.collectionNo) return 1;
+        if (!b.collectionNo) return -1;
+        result = parseInt(a.collectionNo, 10) - parseInt(b.collectionNo, 10);
+        break;
+      }
+
+      case 'class': {
+        const servantA = a.collectionNo ? servantDataMap[a.collectionNo] : undefined;
+        const servantB = b.collectionNo ? servantDataMap[b.collectionNo] : undefined;
+        // 空の値を常に最後に
+        if (!servantA && !servantB) return 0;
+        if (!servantA) return 1;
+        if (!servantB) return -1;
+        result = classOrder[servantA.className] - classOrder[servantB.className];
+        if (result === 0) {
+          result = servantA.collectionNo - servantB.collectionNo;
+        }
+        break;
+      }
+
+      case 'rarity': {
+        const servantA = a.collectionNo ? servantDataMap[a.collectionNo] : undefined;
+        const servantB = b.collectionNo ? servantDataMap[b.collectionNo] : undefined;
+        // サーヴァントデータがない場合は最後に
+        if (!servantA && !servantB) return 0;
+        if (!servantA) return 1;
+        if (!servantB) return -1;
+        result = servantA.rarity - servantB.rarity;
+        if (result === 0) {
+          result = servantA.collectionNo - servantB.collectionNo;
+        }
+        break;
+      }
+
+      case 'servantName': {
+        const nameA = a.servantName || '';
+        const nameB = b.servantName || '';
+        // 空の値を常に最後に
+        if (!nameA && !nameB) return 0;
+        if (!nameA) return 1;
+        if (!nameB) return -1;
+        result = nameA.localeCompare(nameB);
+        break;
+      }
+
+      default:
+        return 0;
+    }
+
+    return isDesc ? -result : result;
+  };
+}

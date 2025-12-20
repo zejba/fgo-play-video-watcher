@@ -13,7 +13,7 @@ import { ExpandMore, FilterAlt } from '@mui/icons-material';
 
 const Container = styled('div')(() => ({
   maxWidth: '1000px',
-  margin: '0 auto 20px',
+  margin: '0 auto',
   backgroundColor: '#f5f5f5',
   borderRadius: '8px',
   border: '1px solid #e0e0e0'

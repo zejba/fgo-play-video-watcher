@@ -108,7 +108,20 @@ export function UsageModal({ open, onClose }: UsageModalProps) {
 
           <Box>
             <Typography variant="h6" gutterBottom>
-              7. 共有
+              7. 達成日の設定
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              達成日は各行から取得します。 対応する列を選択してください。
+              <br />
+              達成日を設定することで、時系列での絞り込みやソートが可能になります。
+              <br />
+              形式: YYYY-MM-DD（例: 2025-12-20）またはYYYY/MM/DD（例: 2025/12/20）
+            </Typography>
+          </Box>
+
+          <Box>
+            <Typography variant="h6" gutterBottom>
+              8. 共有
             </Typography>
             <Typography variant="body2" color="text.secondary">
               データソースの設定はURLのパラメータで管理しているため、設定を変更した後にURLを共有することで、同じ設定を他のユーザーと共有できます。

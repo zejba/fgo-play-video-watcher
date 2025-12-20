@@ -1,5 +1,6 @@
 import { Header } from './Header';
 import { FilterArea } from './FilterArea';
+import { SortFilter } from './SortFilter';
 import { BasicInfoArea } from './BasicInfoArea';
 import { ResultArea } from './ResultArea';
 import { useUpdateSourceSettingsFromQuery } from '../hooks/useUpdateSourceSettingsFromQuery';
@@ -12,6 +13,7 @@ export function TopPage() {
       <Header />
       <BasicInfoArea />
       <FilterArea />
+      <SortFilter />
       <ResultArea />
     </>
   );
