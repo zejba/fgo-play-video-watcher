@@ -196,7 +196,7 @@ export const filteredDataAtom = atom<ResultItem[]>((get) => {
     } else {
       // 名前モード: サーヴァント名で文字列一致
       if (servantNameFilter) {
-        const servantName = item.collectionNo || '';
+        const servantName = item.servantName || '';
         if (!servantName.includes(servantNameFilter)) {
           return false;
         }

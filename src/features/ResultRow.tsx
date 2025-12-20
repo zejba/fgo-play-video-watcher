@@ -144,7 +144,7 @@ export function ResultRow({
               </Text>
             </>
           ) : (
-            <Text>{collectionNo || '不明'}</Text>
+            <Text>{servantName}</Text>
           )}
         </Title>
         {note && (
