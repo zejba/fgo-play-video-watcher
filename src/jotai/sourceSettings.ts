@@ -8,6 +8,7 @@ export interface SourceSettings {
   };
   mapping: {
     urlCol: number;
+    dateCol: number | null;
     notes: { label: string | null; col: number }[];
     questName:
       | {
@@ -47,6 +48,7 @@ export const sourceSettingsDefault: SourceSettings = {
   },
   mapping: {
     urlCol: 3,
+    dateCol: null,
     notes: [],
     questName: {
       mode: 'import',
@@ -133,6 +135,7 @@ export function validateMappingWithDefault(mapping: unknown): SourceSettings['ma
   }
   const ret: SourceSettings['mapping'] = {
     urlCol: 3,
+    dateCol: null,
     notes: [],
     questName: {
       mode: 'import',
@@ -149,6 +152,9 @@ export function validateMappingWithDefault(mapping: unknown): SourceSettings['ma
   };
   if ('urlCol' in mapping) {
     ret.urlCol = toNonNegativeInteger(mapping.urlCol) ?? 3;
+  }
+  if ('dateCol' in mapping) {
+    ret.dateCol = toNonNegativeInteger(mapping.dateCol);
   }
   if ('notes' in mapping && Array.isArray(mapping.notes)) {
     ret.notes = (mapping.notes as unknown[])

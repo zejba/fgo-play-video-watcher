@@ -14,6 +14,7 @@ import {
 } from './filter';
 import { servantDataMap } from '../data/servantData';
 import { extractVideoInfo, type VideoType } from '../utils/videoUtils';
+import { validateAndFormatDate } from '../utils/spreadsheetValidator';
 
 export interface ResultItem {
   id: string;
@@ -24,6 +25,7 @@ export interface ResultItem {
   turnCount: number | null;
   note: string | null;
   questName: string | null;
+  date: string | null;
 }
 
 /**
@@ -86,6 +88,7 @@ export const allDataAtom = atom<ResultItem[]>((get) => {
         : null;
     const questNameValue =
       settings.mapping.questName.mode === 'import' ? cells[settings.mapping.questName.col] || null : null;
+    const dateValue = settings.mapping.dateCol !== null ? cells[settings.mapping.dateCol] || null : null;
     const urlCellValue = cells[settings.mapping.urlCol];
     if (!urlCellValue) {
       return;
@@ -121,7 +124,8 @@ export const allDataAtom = atom<ResultItem[]>((get) => {
         servantName,
         turnCount,
         note: noteValue,
-        questName: settings.mapping.questName.mode === 'fixed' ? settings.mapping.questName.name : questNameValue
+        questName: settings.mapping.questName.mode === 'fixed' ? settings.mapping.questName.name : questNameValue,
+        date: dateValue ? validateAndFormatDate(dateValue) : null
       });
     });
   });

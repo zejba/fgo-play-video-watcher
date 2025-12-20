@@ -18,6 +18,7 @@ interface ResultRowProps {
   turnCount: number | null;
   note: string | null;
   questName: string | null;
+  date: string | null;
 }
 
 const Card = styled('div')(({ theme }) => ({
@@ -113,7 +114,8 @@ export function ResultRow({
   videoType,
   turnCount,
   note,
-  questName
+  questName,
+  date
 }: ResultRowProps) {
   const settings = useAtomValue(sourceSettingsAtom);
   const [isNoteExpanded, setIsNoteExpanded] = useState(false);
@@ -133,6 +135,7 @@ export function ResultRow({
           <Text>
             {settings.mapping.questName.mode === 'import' ? (questName ? `${truncate(questName)} ` : '') : ''}
             {settings.mapping.turn.mode === 'import' ? (turnCount || '?') + 'T' : ''}
+            {settings.mapping.dateCol !== null && date ? ` ${date}` : ''}
           </Text>
         </Title>
         <Title>

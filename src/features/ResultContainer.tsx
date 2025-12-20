@@ -39,6 +39,7 @@ export function ResultContainer({ data }: ResultContainerProps) {
           turnCount={item.turnCount}
           note={item.note}
           questName={item.questName}
+          date={item.date}
         />
       ))}
     </Container>

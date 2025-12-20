@@ -17,6 +17,7 @@ interface TempSettings {
   servantIdColumnIndex: number;
   servantNameColumnIndex: number;
   columnIndex: number;
+  dateColumnIndex: number | null;
   noteColumnIndices: number[];
 }
 
@@ -36,6 +37,7 @@ export const convertSourceSettingsToTemp = (sourceSettings: SourceSettings): Tem
   servantNameColumnIndex:
     sourceSettings.mapping.servantIdentify.mode === 'name' ? sourceSettings.mapping.servantIdentify.col : 2,
   columnIndex: sourceSettings.mapping.urlCol,
+  dateColumnIndex: sourceSettings.mapping.dateCol,
   noteColumnIndices: sourceSettings.mapping.notes.map((col) => col.col)
 });
 
@@ -62,6 +64,8 @@ export const tempServantNameColumnIndexAtom = focusAtom(tempSettingsAtom, (optic
 
 export const tempColumnIndexAtom = focusAtom(tempSettingsAtom, (optic) => optic.prop('columnIndex'));
 
+export const tempDateColumnIndexAtom = focusAtom(tempSettingsAtom, (optic) => optic.prop('dateColumnIndex'));
+
 export const tempNoteColumnIndicesAtom = focusAtom(tempSettingsAtom, (optic) => optic.prop('noteColumnIndices'));
 
 // エラー状態
@@ -71,6 +75,7 @@ export const tempErrorsAtom = atom<{
   spreadsheetId?: string;
   sheetGid?: string;
   columnIndex?: string;
+  dateColumnIndex?: string;
   servantIdColumn?: string;
   servantNameColumn?: string;
   turnCountColumn?: string;
@@ -85,6 +90,7 @@ export const tempUrlTypeErrorAtom = focusAtom(tempErrorsAtom, (optic) => optic.p
 export const tempSpreadsheetIdErrorAtom = focusAtom(tempErrorsAtom, (optic) => optic.prop('spreadsheetId'));
 export const tempSheetGidErrorAtom = focusAtom(tempErrorsAtom, (optic) => optic.prop('sheetGid'));
 export const tempColumnIndexErrorAtom = focusAtom(tempErrorsAtom, (optic) => optic.prop('columnIndex'));
+export const tempDateColumnIndexErrorAtom = focusAtom(tempErrorsAtom, (optic) => optic.prop('dateColumnIndex'));
 export const tempServantIdColumnErrorAtom = focusAtom(tempErrorsAtom, (optic) => optic.prop('servantIdColumn'));
 export const tempServantNameColumnErrorAtom = focusAtom(tempErrorsAtom, (optic) => optic.prop('servantNameColumn'));
 export const tempTurnCountColumnErrorAtom = focusAtom(tempErrorsAtom, (optic) => optic.prop('turnCountColumn'));

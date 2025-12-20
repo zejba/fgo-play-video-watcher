@@ -30,6 +30,7 @@ export function SubmitButton({ onSuccess }: { onSuccess: () => void }) {
           spreadsheetId?: string;
           sheetGid?: string;
           columnIndex?: string;
+          dateColumnIndex?: string;
           servantIdColumn?: string;
           servantNameColumn?: string;
           turnCountColumn?: string;
@@ -64,6 +65,14 @@ export function SubmitButton({ onSuccess }: { onSuccess: () => void }) {
         const columnValidation = validateColumnIndex(tempSettings.columnIndex);
         if (!columnValidation.isValid) {
           newErrors.columnIndex = columnValidation.error || undefined;
+        }
+
+        // 達成日列のバリデーション（nullを許容）
+        if (tempSettings.dateColumnIndex !== null) {
+          const dateColumnValidation = validateColumnIndex(tempSettings.dateColumnIndex);
+          if (!dateColumnValidation.isValid) {
+            newErrors.dateColumnIndex = dateColumnValidation.error || undefined;
+          }
         }
 
         for (const idx of tempSettings.noteColumnIndices) {
@@ -124,6 +133,7 @@ export function SubmitButton({ onSuccess }: { onSuccess: () => void }) {
           },
           mapping: {
             urlCol: tempSettings.columnIndex,
+            dateCol: tempSettings.dateColumnIndex,
             notes: tempSettings.noteColumnIndices.map((col) => ({ label: null, col })),
             questName:
               tempSettings.questNameMode === 'import'

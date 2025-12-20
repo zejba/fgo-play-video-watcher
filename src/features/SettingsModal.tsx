@@ -6,6 +6,7 @@ import { QuestNameArea } from './settings/QuestNameArea';
 import { TurnCountArea } from './settings/TurnCountArea';
 import { ServantArea } from './settings/ServantArea';
 import { VideoUrlArea } from './settings/VideoUrlArea';
+import { DateArea } from './settings/DateArea';
 import { NoteArea } from './settings/NoteArea';
 import { SubmitButton } from './settings/SubmitButton';
 import { UsageModal } from './UsageModal';
@@ -41,6 +42,7 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
           <TurnCountArea />
           <ServantArea />
           <VideoUrlArea />
+          <DateArea />
           <NoteArea />
         </DialogContent>
         <DialogActions sx={{ padding: '4px 16px 12px 16px' }}>

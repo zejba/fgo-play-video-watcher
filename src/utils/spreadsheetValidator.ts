@@ -160,3 +160,48 @@ export function validateColumnIndex(columnIndex: number): {
     isValid: true
   };
 }
+
+/**
+ * 日付文字列をバリデーションしてyyyy/mm/dd形式に変換
+ * y/m/d または y-m-d 形式（桁数任意）を受け付ける
+ * バリデーションに引っかかった場合はnullを返す
+ * @param dateStr - チェックする日付文字列
+ * @returns フォーマットされた日付文字列、またはnull
+ */
+export function validateAndFormatDate(dateStr: string): string | null {
+  if (!dateStr || typeof dateStr !== 'string') {
+    return null;
+  }
+
+  const trimmed = dateStr.trim();
+
+  // y/m/d または y-m-d 形式のバリデーション（桁数任意）
+  const datePattern = /^(\d{1,4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/;
+  const match = trimmed.match(datePattern);
+
+  if (!match) {
+    return null;
+  }
+
+  const year = parseInt(match[1]!, 10);
+  const month = parseInt(match[2]!, 10);
+  const day = parseInt(match[3]!, 10);
+
+  // 年が2桁の場合は西暦に変換（00-99 → 2000-2099）
+  const fullYear = year < 100 ? 2000 + year : year;
+
+  // 日付の妥当性をチェック
+  const date = new Date(fullYear, month - 1, day);
+
+  // 無効な日付の場合はnullを返す
+  if (date.getFullYear() !== fullYear || date.getMonth() !== month - 1 || date.getDate() !== day) {
+    return null;
+  }
+
+  // yyyy/mm/dd形式で返す
+  const formattedYear = fullYear.toString().padStart(4, '0');
+  const formattedMonth = month.toString().padStart(2, '0');
+  const formattedDay = day.toString().padStart(2, '0');
+
+  return `${formattedYear}/${formattedMonth}/${formattedDay}`;
+}
