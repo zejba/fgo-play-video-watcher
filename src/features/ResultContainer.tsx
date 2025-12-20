@@ -17,16 +17,25 @@ const Container = styled('div')(() => ({
 export function ResultContainer({ data }: ResultContainerProps) {
   useEffect(() => {
     // tweetIdsが更新されたらTwitterウィジェットを再読み込み
-    // DOMが完全にレンダリングされた後に実行するため、タイマーで遅延
-    const timer = setTimeout(() => {
-      if (data.length > 0) {
-        const win = window as Window & { twttr?: { widgets: { load: () => void } } };
-        win.twttr?.widgets.load();
-      }
-    }, 300);
+    // DOMが完全にレンダリングされた後に実行するため、二重RAFで遅延
+    let rafId1: number;
+    let rafId2: number;
 
-    return () => clearTimeout(timer);
+    if (data.length > 0) {
+      rafId1 = requestAnimationFrame(() => {
+        rafId2 = requestAnimationFrame(() => {
+          const win = window as Window & { twttr?: { widgets: { load: () => void } } };
+          win.twttr?.widgets.load();
+        });
+      });
+    }
+
+    return () => {
+      if (rafId1) cancelAnimationFrame(rafId1);
+      if (rafId2) cancelAnimationFrame(rafId2);
+    };
   }, [data]);
+
   return (
     <Container>
       {data.map((item) => (
