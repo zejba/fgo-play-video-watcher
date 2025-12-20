@@ -33,6 +33,7 @@ const Card = styled('div')(({ theme }) => ({
 const InfoSection = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     flex: 1,
+    paddingTop: '8px',
     minWidth: 0
   }
 }));
@@ -50,13 +51,10 @@ const Text = styled('div')(() => ({
   color: '#666'
 }));
 
-const Title = styled('div')(({ theme }) => ({
+const Title = styled('div')(() => ({
   display: 'flex',
   columnGap: '4px',
-  flexWrap: 'wrap',
-  [theme.breakpoints.up('md')]: {
-    paddingTop: '8px'
-  }
+  flexWrap: 'wrap'
 }));
 
 const Note = styled('div')<{ isExpanded: boolean }>(({ theme, isExpanded }) => ({
@@ -136,12 +134,14 @@ export function ResultRow({
             {settings.mapping.questName.mode === 'import' ? (questName ? `${truncate(questName)} ` : '') : ''}
             {settings.mapping.turn.mode === 'import' ? (turnCount || '?') + 'T' : ''}
           </Text>
+        </Title>
+        <Title>
           {settings.mapping.servantIdentify.mode === 'collectionNo' ? (
             <>
-              <Text>{servantName ?? '不明なサーヴァント'}</Text>
               <Text>
                 ★{rarity} {localizedServantClassName}
               </Text>
+              <Text>{servantName ?? '不明なサーヴァント'}</Text>
             </>
           ) : (
             <Text>{servantName}</Text>
