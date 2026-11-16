@@ -17037,5 +17037,55 @@
         "count": -1
       }
     ]
+  },
+  {
+    "aaId": 2501700,
+    "id": "2501700",
+    "collectionNo": 487,
+    "name": "ダイナマイト利休",
+    "rarity": 5,
+    "className": "foreigner",
+    "attribute": "human",
+    "atkMax": 12281,
+    "atk120": 15780,
+    "starGen": 14.8,
+    "npGain": 0.61,
+    "hitCounts": {
+      "buster": 3,
+      "arts": 4,
+      "quick": 5,
+      "extra": 5,
+      "np": 7
+    },
+    "noblePhantasm": {
+      "card": "buster",
+      "value": 1000
+    },
+    "classPassive": [
+      {
+        "type": "busterBuff",
+        "value": 5,
+        "turn": -1,
+        "count": -1
+      },
+      {
+        "type": "starGetBuff",
+        "value": 5,
+        "turn": -1,
+        "count": -1
+      },
+      {
+        "type": "noblePhantasmBuff",
+        "value": 5,
+        "turn": -1,
+        "count": -1
+      },
+      {
+        "type": "criticalBuff",
+        "value": 5,
+        "turn": -1,
+        "count": -1
+      }
+    ]
   }
 ]
